@@ -15,7 +15,7 @@ import ChannelListInServer from "../Channel/ChannelListInServer";
 import ServerEditModal from "../Server/ServerEdit";
 import CurrentUserDm from "../DM/CurrentUserDM";
 import DMBox from "../DM/DMBox";
-
+import ChatBox from "./Chatbox";
 
 
 function MainPage(props) {
@@ -42,16 +42,16 @@ function MainPage(props) {
             <div className="server-sidebar">
                 <CurrentUserServer />
                 <div className="server-plus">
-                    <ServerCreateModal />
+                    {/* <ServerCreateModal /> */}
                 </div>
 
             </div>
 
             <div className="channel-or-DM-sidebar">
-                {messageShow && <ServerEditModal />}
-                {messageShow && <ServerDelete />}
+                {/* {messageShow && <ServerEditModal />} */}
+                {/* {messageShow && <ServerDelete />} */}
                 <div>
-                    {messageShow && <ChannelCreateModal />}
+                    {/* {messageShow && <ChannelCreateModal />} */}
                 </div>
 
                 <div>
@@ -60,26 +60,33 @@ function MainPage(props) {
                     {messageShow && <ChannelEditModal />}
                 </div>
 
+
                 <div>
-                    <LogoutButton />
+                    <ChatBox />
+                </div>
+
+
+
+                <div>
+                    {/* <LogoutButton /> */}
                 </div>
             </div>
             <div className="messages-users-container">
                 <>test test</>
-                <div> <MessagesBoxTop /></div>
+                {/* <div> <MessagesBoxTop /></div> */}
                 <div>
                     {messageShow &&
                         <div className="messages-container"> all the messages map
-                            <MessagesBox />
+                            {/* <MessagesBox /> */}
                         </div>
                     }
                     {dmShow &&
                         <>
-                            <DMBox />
+                            {/* <DMBox /> */}
                         </>
                     }
                     <div className="server-users-bar">
-                        <UsersInOneServer />
+                        {/* <UsersInOneServer /> */}
                     </div>
                 </div>
 

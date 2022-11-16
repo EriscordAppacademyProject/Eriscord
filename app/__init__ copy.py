@@ -10,10 +10,15 @@ from .api.auth_routes import auth_routes
 from .api.channel_routes import channel_routes
 from .api.server_routes import server_routes
 from .api.message_routes import message_routes
-from .socket import socketio
+from .socketio import SocketIO
 from .seeds import seed_commands
 from .config import Config
+from flask_socketio import SocketIO, send, emit, join_room, leave_room
 import eventlet
+
+origins = "*"
+
+eventlet.monkey_patch()
 
 app = Flask(__name__, static_folder='../react-app/build', static_url_path='/')
 
@@ -22,9 +27,59 @@ login = LoginManager(app)
 login.login_view = 'auth.unauthorized'
 
 
+socketio = SocketIO(app, cors_allowed_origins=origins)
+
+# @socketio.on('connect')
+# def handle_connect(data):
+#     print("~~~~~~!!!!!!")
+
+
+@socketio.on("chat")
+def handle_chat(data):
+    emit("chat", data, broadcast=True)
+
+
+
+
+
+# @socketio.on('message')
+# def handleMessage(msg):
+#     print(f"server reveived: {msg}")
+
+
+
+
+
+# @socketio.event
+# def joinRoom(message):
+#     print(message)
+#     join_room(message['room'])
+
+#     emit("roomJoined", {
+#         "user": request.sid,
+#         "room" : message['room']
+#     }, to=message['room'])
+
+# @socketio.event
+# def leaveRoom(message):
+#     emit('roomLeftPersonal', {'room':message['room'], 'user':request.sid})
+#     leave_room(message['room'])
+#     emit('roomLeft', {'room': message['room'], 'user': request.sid}, to = message['room'])
+
+# @socketio.event
+# def sendMsg(message):
+#     print(message)
+#     emit('SendtoAll', {
+#         "msg":message['msg'],
+#         "user":request.sid
+#     }, to = message['room'])
+
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
+
 
 
 # Tell flask about our seed commands
@@ -39,9 +94,28 @@ app.register_blueprint(message_routes, url_prefix='/api/messages')
 
 db.init_app(app)
 Migrate(app, db)
+
+
+
 socketio.init_app(app)
+
 # Application Security
 CORS(app)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # Since we are deploying with Docker and Flask,
@@ -93,6 +167,9 @@ def api_help():
                               app.view_functions[rule.endpoint].__doc__]
                   for rule in app.url_map.iter_rules() if rule.endpoint != 'static'}
     return route_list
+
+
+
 
 if __name__ == '__main__':
     socketio.run(app)
